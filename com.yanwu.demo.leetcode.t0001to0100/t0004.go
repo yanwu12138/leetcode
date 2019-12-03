@@ -21,50 +21,80 @@ description: 寻找两个有序数组的中位数
 */
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
-	nums1 := []int{1, 3}
-	nums2 := []int{2}
+	nums1 := []int{}
+	nums2 := []int{1, 2, 3, 4, 5}
 	fmt.Println(findMedianSortedArrays(nums1, nums2))
 }
 
 func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
-	if len(nums1) == 0 && len(nums2) > 0 {
+	if len(nums1) == 0 && len(nums2) == 0 {
 		return 0.0
-	} else if len(nums1) == 0 && len(nums2) > 0 {
+	}
+	if len(nums1) == 0 && len(nums2) > 0 {
 		return getMedianSorted(nums2)
 	} else if len(nums1) > 0 && len(nums2) == 0 {
 		return getMedianSorted(nums1)
 	} else {
-		var temp = make([]int, len(nums1)+len(nums2))
-		if len(nums1) > len(nums2) {
-			for i := 0; i < len(nums1); i++ {
-				for j := 0; j < len(nums2); j++ {
-					if nums1[i] < nums2[j] {
-						temp[i+j] = nums1[i]
-					} else {
-						continue
-					}
-				}
-			}
-		} else {
-			for i := 0; i < len(nums2); i++ {
-				for j := 0; j < len(nums1); j++ {
-					if nums2[i] < nums1[j] {
-						temp[i+j] = nums2[i]
-					} else {
-						continue
-					}
-				}
-			}
-		}
-		return getMedianSorted([]int{})
+		return getMedianSorted(short(nums1, nums2))
 	}
 }
 
+/**
+使用归并排序法将两个数组组合成一个数组
+*/
+func short(nums1, nums2 []int) []int {
+	len1, len2 := len(nums1), len(nums2)
+	nums := make([]int, len1+len2)
+	i, j, k := 0, 0, 0
+	for {
+		if i >= len1 || j >= len2 {
+			break
+		}
+		if nums1[i] < nums2[j] {
+			nums[k] = nums1[i]
+			i++
+		} else {
+			nums[k] = nums2[j]
+			j++
+		}
+		k++
+	}
+	for {
+		if i >= len1 {
+			break
+		}
+		nums[k] = nums1[i]
+		k++
+		i++
+	}
+	for {
+		if j >= len2 {
+			break
+		}
+		nums[k] = nums2[j]
+		k++
+		j++
+	}
+	return nums
+}
+
 func getMedianSorted(nums []int) float64 {
+	if len(nums) == 1 {
+		// ----- 当长度为1时直接返回
+		return float64(nums[0])
+	}
 	median := len(nums) / 2
-	fmt.Println(median)
-	return 0.0
+	if len(nums)&1 == 1 {
+		// ----- 奇数
+		return float64(nums[median])
+	} else {
+		// ----- 偶数
+		return (float64(nums[median-1]) + float64(nums[median])) / 2
+
+	}
 }
