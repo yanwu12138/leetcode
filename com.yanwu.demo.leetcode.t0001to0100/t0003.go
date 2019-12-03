@@ -41,12 +41,12 @@ func lengthOfLongestSubstring(s string) int {
 	maxLength := 0
 	for i := 0; i < len(s); i++ {
 		temp := 1
-		item := string(s[i])
+		subStr := string(s[i])
 		for j := i + 1; j < len(s); j++ {
-			if strings.Contains(item, string(s[j])) {
+			if strings.Contains(subStr, string(s[j])) {
 				break
 			}
-			item = item + string(s[j])
+			subStr = subStr + string(s[j])
 			temp++
 		}
 		if temp > maxLength {
