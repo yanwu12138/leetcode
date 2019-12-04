@@ -21,46 +21,54 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
 func main() {
-	str := "babad"
+	str := "ccccc"
 	fmt.Println(longestPalindrome(str))
 }
 
 func longestPalindrome(s string) string {
+	if len(s) <= 1 {
+		return s
+	}
 	subStr := ""
-	size, index := 0, 0
 	for i := 0; i < len(s); i++ {
-		temp := s[index:i]
-		surplus := reverseString(s[i:])
-		fmt.Println("temp: ", temp, " surplus: ", surplus)
-		if !strings.Contains(surplus, temp) {
-			index = i
-			continue
-		}
-		if len(temp) > size {
+		temp := expandAroundCenter(s, string(s[i]), i)
+		if len(temp) > len(subStr) {
 			subStr = temp
 		}
-	}
-	temp := subStr
-	if strings.Contains(s[len(subStr)+1:], s[strings.Index(s, subStr):len(subStr)+1]) {
-		for i := len(temp); i > 0; i-- {
-			subStr = subStr + string(temp[i-1])
-		}
-	} else {
-		for i := len(temp) - 1; i > 0; i-- {
-			subStr = subStr + string(temp[i-1])
-		}
+
 	}
 	return subStr
 }
 
-func reverseString(s string) string {
-	runes := []rune(s)
-	for from, to := 0, len(runes)-1; from < to; from, to = from+1, to-1 {
-		runes[from], runes[to] = runes[to], runes[from]
+func expandAroundCenter(str, item string, index int) string {
+	L, R := index, index
+	result := item
+	if L > 0 && item == string(str[L-1]) {
+		L--
+		result = string(str[L]) + result
 	}
-	return string(runes)
+	if R < len(str)-1 && item == string(str[R+1]) {
+		R++
+		result = result + string(str[R])
+	}
+	for {
+		if L > 0 && str[L] == str[L-1] && str[L-1] == str[R+1] {
+			L--
+			result = string(str[L]) + result
+		}
+		if R < len(str)-1 && str[R] == str[R+1] && str[L-1] == str[R+1] {
+			R++
+			result = result + string(str[R])
+		}
+		if L-1 < 0 || R+1 >= len(str) || str[L-1] != str[R+1] {
+			break
+		}
+		L--
+		R++
+		result = string(str[L]) + result + string(str[R])
+	}
+	return result
 }
