@@ -40,6 +40,7 @@ func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
 	} else if len(nums1) > 0 && len(nums2) == 0 {
 		return getMedianSorted(nums1)
 	} else {
+		// ----- 将两个数组合并起来，然后找到中位数
 		return getMedianSorted(short(nums1, nums2))
 	}
 }

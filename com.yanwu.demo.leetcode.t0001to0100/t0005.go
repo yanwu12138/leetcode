@@ -24,7 +24,7 @@ import (
 )
 
 func main() {
-	str := "ccccc"
+	str := "aba"
 	fmt.Println(longestPalindrome(str))
 }
 
@@ -32,43 +32,39 @@ func longestPalindrome(s string) string {
 	if len(s) <= 1 {
 		return s
 	}
-	subStr := ""
+	// ----- 起始位置和结束位置
+	var ind = []int{0, 0}
 	for i := 0; i < len(s); i++ {
-		temp := expandAroundCenter(s, string(s[i]), i)
-		if len(temp) > len(subStr) {
-			subStr = temp
-		}
-
+		// ----- 把回文看成中间的部分全是同一字符，左右部分相对称
+		// ----- 找到下一个与当前字符不同的字符
+		i = expandAroundCenter(s, i, ind)
 	}
-	return subStr
+	return s[ind[0] : ind[1]+1]
 }
 
-func expandAroundCenter(str, item string, index int) string {
-	L, R := index, index
-	result := item
-	if L > 0 && item == string(str[L-1]) {
-		L--
-		result = string(str[L]) + result
-	}
-	if R < len(str)-1 && item == string(str[R+1]) {
-		R++
-		result = result + string(str[R])
-	}
+func expandAroundCenter(str string, low int, ind []int) int {
+	// ----- 找到中间部分
+	high := low
 	for {
-		if L > 0 && str[L] == str[L-1] && str[L-1] == str[R+1] {
-			L--
-			result = string(str[L]) + result
-		}
-		if R < len(str)-1 && str[R] == str[R+1] && str[L-1] == str[R+1] {
-			R++
-			result = result + string(str[R])
-		}
-		if L-1 < 0 || R+1 >= len(str) || str[L-1] != str[R+1] {
+		if high >= len(str)-1 || str[high+1] != str[low] {
 			break
 		}
-		L--
-		R++
-		result = string(str[L]) + result + string(str[R])
+		high++
 	}
-	return result
+	// ----- 定位中间部分的最后一个字符
+	ans := high
+	// ----- 从中间向左右扩散
+	for {
+		if low <= 0 || high >= len(str)-1 || str[low-1] != str[high+1] {
+			break
+		}
+		low--
+		high++
+	}
+	// ----- 记录开始与结束位置
+	if high-low > ind[1]-ind[0] {
+		ind[0] = low
+		ind[1] = high
+	}
+	return ans
 }
