@@ -19,9 +19,7 @@ description: 最长回文子串
 
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
 	str := "aba"
@@ -42,29 +40,24 @@ func longestPalindrome(s string) string {
 	return s[ind[0] : ind[1]+1]
 }
 
-func expandAroundCenter(str string, low int, ind []int) int {
-	// ----- 找到中间部分
-	high := low
-	for {
-		if high >= len(str)-1 || str[high+1] != str[low] {
-			break
-		}
-		high++
+func expandAroundCenter(str string, L int, ind []int) int {
+	// ----- 找到中间相同字符部分
+	R := L
+	for R < len(str)-1 && str[R+1] == str[L] {
+		R++
 	}
-	// ----- 定位中间部分的最后一个字符
-	ans := high
+	// ----- 定位中间同字符部分的最后一个字符
+	ans := R
 	// ----- 从中间向左右扩散
-	for {
-		if low <= 0 || high >= len(str)-1 || str[low-1] != str[high+1] {
-			break
-		}
-		low--
-		high++
+	for L > 0 && R < len(str)-1 && str[L-1] == str[R+1] {
+		L--
+		R++
 	}
 	// ----- 记录开始与结束位置
-	if high-low > ind[1]-ind[0] {
-		ind[0] = low
-		ind[1] = high
+	if R-L > ind[1]-ind[0] {
+		ind[0] = L
+		ind[1] = R
 	}
+	// ----- 返回进行下一轮的查找
 	return ans
 }

@@ -21,12 +21,10 @@ description: 寻找两个有序数组的中位数
 */
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
-	nums1 := []int{1}
+	nums1 := []int{}
 	nums2 := []int{1, 2, 3, 4, 5}
 	fmt.Println(findMedianSortedArrays(nums1, nums2))
 }
@@ -52,10 +50,7 @@ func short(nums1, nums2 []int) []int {
 	len1, len2 := len(nums1), len(nums2)
 	nums := make([]int, len1+len2)
 	i, j, k := 0, 0, 0
-	for {
-		if i >= len1 || j >= len2 {
-			break
-		}
+	for i < len1 && j < len2 {
 		if nums1[i] < nums2[j] {
 			nums[k] = nums1[i]
 			i++
@@ -65,18 +60,12 @@ func short(nums1, nums2 []int) []int {
 		}
 		k++
 	}
-	for {
-		if i >= len1 {
-			break
-		}
+	for i < len1 {
 		nums[k] = nums1[i]
 		k++
 		i++
 	}
-	for {
-		if j >= len2 {
-			break
-		}
+	for j < len2 {
 		nums[k] = nums2[j]
 		k++
 		j++
