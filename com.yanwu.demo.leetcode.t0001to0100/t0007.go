@@ -14,7 +14,7 @@ description: 整数反转
 * 输入: 120
 * 输出: 21
 注意:
-假设我们的环境只能存储得下 32 位的有符号整数，则其数值范围为 [−231,  231 − 1]。请根据这个假设，如果反转后整数溢出那么就返回 0。
+假设我们的环境只能存储得下 32 位的有符号整数，则其数值范围为 [−2^31, 2^31 − 1]。请根据这个假设，如果反转后整数溢出那么就返回 0。
 <P>
 来源：力扣（LeetCode）
 链接：https://leetcode-cn.com/problems/reverse-integer
@@ -22,47 +22,30 @@ description: 整数反转
 */
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func main() {
-	fmt.Println(reverse(123))
+	fmt.Println(reverse(1))
 }
 
 func reverse(x int) int {
-
-	return 0
+	result := 0
+	if x >= -9 && x <= 9 {
+		// ----- 个位数直接返回
+		return x
+	}
+	for x != 0 {
+		// ----- 逐位取模，并将计算结果赋值给result
+		pop := x % 10
+		result = result*10 + pop
+		x /= 10
+	}
+	if result < math.MinInt32 || result > math.MaxInt32 {
+		// ----- 如果数字结果超过[−2^31, 2^31 − 1]返回0
+		result = 0
+	}
+	return result
 }
-
-/**
-class Solution {
-    public int reverse(int x) {
-        int a = 0;
-        try {
-            String reverse = "";
-            if (x >= 0) {
-                String s = String.valueOf(x);
-                int length = s.length();
-                for (int i = 0; i < length; i++) {
-                    reverse = s.charAt(i) + reverse;
-                }
-            } else {
-                String s = String.valueOf(x).split("-")[1];
-                int length = s.length();
-                for (int i = 0; i < length; i++) {
-                    reverse = s.charAt(i) + reverse;
-                }
-                reverse = "-" + reverse;
-            }
-            int result = Integer.parseInt(reverse);
-            if (result > Integer.MAX_VALUE || result < Integer.MIN_VALUE) {
-                a = 0;
-            } else {
-                a = result;
-            }
-        } catch (Exception e) {
-
-        }
-        return a;
-    }
-}
-*/

@@ -34,7 +34,7 @@ package main
 import "fmt"
 
 func main() {
-	str, numRows := "PAYPALISHIRING", 4
+	str, numRows := "LEETCODEISHIRING", 4
 	fmt.Println(convert(str, numRows))
 }
 
@@ -42,21 +42,25 @@ func convert(s string, numRows int) string {
 	if len(s) <= 1 || len(s) <= numRows {
 		return s
 	}
-	// ----- result[返回值]；tempArr[Z字每一行的字符串]；curRow[]：goingDown[]
-	result, tempArr, curRow, goingDown := "", make([]string, len(s)), 0, false
+	// ----- tempArr[Z字每一行的字符串]；curRow[行号]：goingDown[往上走或往下走的标签]
+	tempArr, curRow, goingDown := make([]string, numRows), 0, false
 	for index := range s {
+		// ----- 依次将每个字符追加到对应的行字符串里
 		tempArr[curRow] += string(s[index])
 		if curRow == 0 || curRow == numRows-1 {
+			// ----- 转弯
 			goingDown = !goingDown
 		}
 		if goingDown {
-			// ----- 判断往上走
+			// ----- 往下走
 			curRow++
 		} else {
-			// -----
+			// ----- 往上走
 			curRow--
 		}
 	}
+	// ----- 组装数据返回
+	result := ""
 	for index := range tempArr {
 		result += tempArr[index]
 	}
