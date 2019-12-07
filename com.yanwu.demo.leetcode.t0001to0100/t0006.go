@@ -34,7 +34,7 @@ package main
 import "fmt"
 
 func main() {
-	str, numRows := "LEETCODEISHIRING", 3
+	str, numRows := "PAYPALISHIRING", 4
 	fmt.Println(convert(str, numRows))
 }
 
@@ -42,19 +42,23 @@ func convert(s string, numRows int) string {
 	if len(s) <= 1 || len(s) <= numRows {
 		return s
 	}
-	strArr := make([]string, len(s)/numRows+1)
-	strInd, line := 0, 0
-	for i := 0; i < len(s); {
-		temp := ""
-		for {
-			if len(temp) == numRows {
-				strArr[line] = temp
-				line++
-				break
-			}
-
+	// ----- result[返回值]；tempArr[Z字每一行的字符串]；curRow[]：goingDown[]
+	result, tempArr, curRow, goingDown := "", make([]string, len(s)), 0, false
+	for index := range s {
+		tempArr[curRow] += string(s[index])
+		if curRow == 0 || curRow == numRows-1 {
+			goingDown = !goingDown
+		}
+		if goingDown {
+			// ----- 判断往上走
+			curRow++
+		} else {
+			// -----
+			curRow--
 		}
 	}
-	fmt.Printf("nums: %v \n", strArr)
-	return s
+	for index := range tempArr {
+		result += tempArr[index]
+	}
+	return result
 }
